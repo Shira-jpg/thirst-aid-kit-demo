@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Thirst Aid Kit - Caregiver App</title>
+  
+<!-- Firebase v8 compat CDN libraries (required by the assignment) -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script>
+  // TODO: Replace this placeholder with your own Firebase configuration keys.
+  // Firebase Console -> Project settings -> Your apps -> SDK setup and configuration.
+  const firebaseConfig = {// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyDdA8UbaQhTy-AlvjXGUYOsoGk_IZ23te8",
+  authDomain: "aquavital-thirst-aid-kit.firebaseapp.com",
+  databaseURL: "https://aquavital-thirst-aid-kit-default-rtdb.firebaseio.com",
+  projectId: "aquavital-thirst-aid-kit",
+  storageBucket: "aquavital-thirst-aid-kit.firebasestorage.app",
+  messagingSenderId: "603947421819",
+  appId: "1:603947421819:web:10ae7430358752af4612de",
+  measurementId: "G-ZXDFM4BB0D"
+};
+
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+
+
+
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyDdA8UbaQhTy-AlvjXGUYOsoGk_IZ23te8",
+  authDomain: "aquavital-thirst-aid-kit.firebaseapp.com",
+  databaseURL: "https://aquavital-thirst-aid-kit-default-rtdb.firebaseio.com",
+  projectId: "aquavital-thirst-aid-kit",
+  storageBucket: "aquavital-thirst-aid-kit.firebasestorage.app",
+  messagingSenderId: "603947421819",
+  appId: "1:603947421819:web:10ae7430358752af4612de",
+  measurementId: "G-ZXDFM4BB0D"
+};
+
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+
+
+    apiKey: "PASTE_YOUR_API_KEY_HERE",
+    authDomain: "PASTE_YOUR_AUTH_DOMAIN_HERE",
+    databaseURL: "PASTE_YOUR_DATABASE_URL_HERE",
+    projectId: "PASTE_YOUR_PROJECT_ID_HERE",
+    storageBucket: "PASTE_YOUR_STORAGE_BUCKET_HERE",
+    messagingSenderId: "PASTE_YOUR_MESSAGING_SENDER_ID_HERE",
+    appId: "PASTE_YOUR_APP_ID_HERE"
+  };
+
+  function isFirebaseConfigured() {
+    return firebaseConfig.apiKey && !firebaseConfig.apiKey.includes("PASTE_") && firebaseConfig.databaseURL && !firebaseConfig.databaseURL.includes("PASTE_");
+  }
+
+  let db = null;
+  if (isFirebaseConfigured()) {
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.database();
+  }
+</script>
+
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #f5f7fb; color: #111827; }
+    header { background: #0f4c81; color: white; padding: 18px; text-align: center; }
+    main { max-width: 900px; margin: 18px auto; padding: 0 16px 30px; }
+    .card { background: white; border-radius: 14px; padding: 18px; margin-bottom: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .status { padding: 12px; border-radius: 10px; background: #e5e7eb; margin-top: 10px; }
+    .warn { background: #fff7ed; color: #9a3412; }
+    .alert { background: #b91c1c; color: white; border-radius: 14px; padding: 18px; font-size: 22px; font-weight: bold; margin-bottom: 14px; }
+    .low { background: #d1fae5; }
+    .medium { background: #fef3c7; }
+    .high { background: #fee2e2; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
+    .metric { background: #f3f4f6; border-radius: 12px; padding: 14px; }
+    .metric span { display: block; color: #4b5563; font-size: 14px; }
+    .metric b { display: block; font-size: 28px; margin-top: 6px; }
+    .risk { font-size: 34px; font-weight: bold; }
+    button { border: none; border-radius: 10px; padding: 12px 16px; font-size: 16px; cursor: pointer; background: #0f4c81; color: white; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Caregiver Dashboard</h1>
+    <p>The Thirst Aid Kit - Live Monitoring Demo</p>
+  </header>
+
+  <main>
+    <div class="card">
+      <h2>Firebase Status</h2>
+      <div id="firebaseStatus" class="status"></div>
+    </div>
+
+    <div id="alertBox" style="display:none" class="alert"></div>
+
+    <div class="card" id="riskCard">
+      <h2>Patient Status</h2>
+      <p>Patient: <b id="patientName">Demo Patient</b></p>
+      <p class="risk">Risk Level: <span id="riskLevel">Waiting for data...</span></p>
+      <p id="alertReason">Open patient.html on the smartphone and send a reading.</p>
+      <p><b>Last update:</b> <span id="lastUpdate">No data yet</span></p>
+    </div>
+
+    <div class="card">
+      <h2>Latest Sensor Readings</h2>
+      <div class="grid">
+        <div class="metric"><span>Temperature</span><b id="temperature">--</b></div>
+        <div class="metric"><span>Pulse</span><b id="pulse">--</b></div>
+        <div class="metric"><span>Saliva Conductivity</span><b id="conductivity">--</b></div>
+        <div class="metric"><span>Daily Intake</span><b id="intake">--</b></div>
+        <div class="metric"><span>Minutes Since Last Sip</span><b id="minutes">--</b></div>
+        <div class="metric"><span>Risk Score</span><b id="score">--</b></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Caregiver Action</h2>
+      <p id="actionText">Waiting for patient readings.</p>
+      <button onclick="acknowledgeAlert()">Acknowledge Alert</button>
+      <div id="ackStatus" class="status">No alert acknowledged yet.</div>
+    </div>
+  </main>
+
+<script>
+  let lastHighRiskTimestamp = null;
+
+  function formatTime(ts) {
+    if (!ts) return "No data yet";
+    return new Date(ts).toLocaleString();
+  }
+
+  function updateDashboard(data) {
+    if (!data) return;
+    document.getElementById("patientName").textContent = data.patientName || "Demo Patient";
+    document.getElementById("riskLevel").textContent = data.riskLevel || "Unknown";
+    document.getElementById("alertReason").textContent = data.alertReason || "No alert reason provided.";
+    document.getElementById("lastUpdate").textContent = formatTime(data.updatedAt);
+    document.getElementById("temperature").textContent = (data.temperature ?? "--") + " °C";
+    document.getElementById("pulse").textContent = (data.pulse ?? "--") + " BPM";
+    document.getElementById("conductivity").textContent = data.salivaConductivity ?? "--";
+    document.getElementById("intake").textContent = (data.dailyIntakeMl ?? "--") + " ml";
+    document.getElementById("minutes").textContent = (data.minutesSinceLastSip ?? "--") + " min";
+    document.getElementById("score").textContent = data.riskScore ?? "--";
+
+    const riskCard = document.getElementById("riskCard");
+    riskCard.className = "card " + (data.riskLevel || "").toLowerCase();
+
+    const alertBox = document.getElementById("alertBox");
+    if (data.riskLevel === "High") {
+      alertBox.style.display = "block";
+      alertBox.textContent = "HIGH DEHYDRATION RISK ALERT - action required within demo workflow.";
+      document.getElementById("actionText").textContent = "Recommended action: check the patient, offer water, and confirm whether follow-up is needed.";
+      if (lastHighRiskTimestamp !== data.updatedAt) {
+        lastHighRiskTimestamp = data.updatedAt;
+        beep();
+      }
+    } else {
+      alertBox.style.display = "none";
+      document.getElementById("actionText").textContent = data.riskLevel === "Medium" ?
+        "Recommended action: monitor closely and encourage drinking." :
+        "Recommended action: continue routine monitoring.";
+    }
+  }
+
+  function beep() {
+    try {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      const ctx = new AudioContext();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.frequency.value = 880;
+      gain.gain.value = 0.08;
+      osc.start();
+      setTimeout(() => { osc.stop(); ctx.close(); }, 250);
+    } catch (e) {
+      // Audio is optional for the demo. Ignore if blocked by browser.
+    }
+  }
+
+  function acknowledgeAlert() {
+    document.getElementById("ackStatus").textContent = "Alert acknowledged at " + new Date().toLocaleTimeString();
+  }
+
+  if (!db) {
+    document.getElementById("firebaseStatus").textContent = "Firebase config is missing. Paste your Firebase keys in the code.";
+    document.getElementById("firebaseStatus").className = "status warn";
+  } else {
+    document.getElementById("firebaseStatus").textContent = "Connected to Firebase config. Waiting for patient readings.";
+    document.getElementById("firebaseStatus").className = "status";
+    db.ref("demo/current").on("value", snapshot => {
+      updateDashboard(snapshot.val());
+    }, error => {
+      document.getElementById("firebaseStatus").textContent = "Firebase error: " + error.message;
+      document.getElementById("firebaseStatus").className = "status warn";
+    });
+  }
+</script>
+</body>
+</html>
