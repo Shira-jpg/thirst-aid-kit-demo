@@ -11,17 +11,33 @@
 
   <script>
     const firebaseConfig = {
-      apiKey: "AIzaSyDdA8UbaQhTy-AlvjXGUYOsoGk_IZ23te8",
-      authDomain: "aquavital-thirst-aid-kit.firebaseapp.com",
-      databaseURL: "https://aquavital-thirst-aid-kit-default-rtdb.firebaseio.com",
-      projectId: "aquavital-thirst-aid-kit",
-      storageBucket: "aquavital-thirst-aid-kit.firebasestorage.app",
-      messagingSenderId: "603947421819",
-      appId: "1:603947421819:web:10ae7430358752af4612de"
+      apiKey: "PASTE_YOUR_API_KEY_HERE",
+      authDomain: "PASTE_YOUR_AUTH_DOMAIN_HERE",
+      databaseURL: "PASTE_YOUR_DATABASE_URL_HERE",
+      projectId: "PASTE_YOUR_PROJECT_ID_HERE",
+      storageBucket: "PASTE_YOUR_STORAGE_BUCKET_HERE",
+      messagingSenderId: "PASTE_YOUR_MESSAGING_SENDER_ID_HERE",
+      appId: "PASTE_YOUR_APP_ID_HERE"
     };
 
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+    function isFirebaseConfigured() {
+      return firebaseConfig.apiKey &&
+        !firebaseConfig.apiKey.includes("PASTE_") &&
+        firebaseConfig.databaseURL &&
+        !firebaseConfig.databaseURL.includes("PASTE_");
+    }
+
+    let db = null;
+    let firebaseInitError = null;
+
+    try {
+      if (isFirebaseConfigured()) {
+        firebase.initializeApp(firebaseConfig);
+        db = firebase.database();
+      }
+    } catch (error) {
+      firebaseInitError = error.message;
+    }
   </script>
 
   <style>
@@ -40,7 +56,7 @@
     }
 
     main {
-      max-width: 620px;
+      max-width: 650px;
       margin: 18px auto;
       padding: 0 14px 30px;
     }
@@ -134,13 +150,19 @@
       display: block;
       font-size: 18px;
     }
+
+    .small-note {
+      font-size: 13px;
+      color: #4b5563;
+      line-height: 1.4;
+    }
   </style>
 </head>
 
 <body>
   <header>
     <h1>Patient App</h1>
-    <p>The Thirst Aid Kit - Smart Cup Simulator</p>
+    <p>The Thirst Aid Kit - Smart Cup Live Simulator</p>
   </header>
 
   <main>
@@ -150,7 +172,7 @@
     </div>
 
     <div class="card">
-      <h2>Simulated Sensor Readings</h2>
+      <h2>Simulated Live Sensor Readings</h2>
 
       <label>Temperature: <span class="value" id="temperatureVal">36.8</span> °C</label>
       <input id="temperature" type="range" min="35.5" max="39.5" step="0.1" value="36.8" />
@@ -166,15 +188,26 @@
 
       <label>Minutes Since Last Sip: <span class="value" id="minutesVal">20</span> min</label>
       <input id="minutes" type="range" min="0" max="240" step="5" value="20" />
+
+      <p class="small-note">
+        The readings are simulated for demo purposes. In live mode, they change every 5 seconds to imitate realistic patient monitoring.
+      </p>
     </div>
 
     <div class="card">
       <h2>Demo Actions</h2>
+
       <button class="normal" onclick="presetNormal()">Set Normal Reading</button>
       <button class="medium" onclick="presetMedium()">Set Medium Risk Reading</button>
       <button class="danger" onclick="presetHigh()">Set High Risk Reading</button>
+
       <button class="primary" onclick="sendReading(false)">Send Current Reading</button>
       <button class="alert" onclick="sendReading(true)">Force High Risk Alert</button>
+
+      <button class="primary" onclick="startLiveSimulation()">Start Live Simulation</button>
+      <button class="danger" onclick="stopLiveSimulation()">Stop Live Simulation</button>
+      <button class="normal" onclick="simulateSip()">Simulate Patient Sip</button>
+
       <div id="sendStatus" class="status">No reading sent yet.</div>
     </div>
 
@@ -190,9 +223,18 @@
 
   <script>
     const fields = ["temperature", "pulse", "conductivity", "intake", "minutes"];
+    let liveSimulationTimer = null;
 
     function number(id) {
       return Number(document.getElementById(id).value);
+    }
+
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function randomChange(amount) {
+      return (Math.random() * amount * 2) - amount;
     }
 
     function updateDisplay() {
@@ -271,22 +313,40 @@
       setValues(38.0, 110, 830, 420, 190);
     }
 
-    function sendReading(forceAlert) {
+    function buildReading(forceAlert) {
       const result = calculateRisk(forceAlert);
 
-      const reading = {
-        patientName: "Demo Patient",
-        temperature: number("temperature"),
-        pulse: number("pulse"),
-        salivaConductivity: number("conductivity"),
-        dailyIntakeMl: number("intake"),
-        minutesSinceLastSip: number("minutes"),
-        riskLevel: result.level,
-        riskScore: result.score,
-        alertForced: forceAlert,
-        alertReason: result.reason,
-        updatedAt: Date.now()
+      return {
+        result: result,
+        reading: {
+          patientName: "Demo Patient",
+          temperature: number("temperature"),
+          pulse: number("pulse"),
+          salivaConductivity: number("conductivity"),
+          dailyIntakeMl: number("intake"),
+          minutesSinceLastSip: number("minutes"),
+          riskLevel: result.level,
+          riskScore: result.score,
+          alertForced: forceAlert,
+          alertReason: result.reason,
+          updatedAt: Date.now()
+        }
       };
+    }
+
+    function sendReading(forceAlert) {
+      if (!db) {
+        document.getElementById("sendStatus").textContent =
+          firebaseInitError
+            ? "Firebase initialization error: " + firebaseInitError
+            : "Firebase config is missing. Paste your Firebase keys in the code.";
+        document.getElementById("sendStatus").className = "status warn";
+        return;
+      }
+
+      const built = buildReading(forceAlert);
+      const result = built.result;
+      const reading = built.reading;
 
       db.ref("demo/current").set(reading)
         .then(() => {
@@ -301,9 +361,105 @@
         });
     }
 
-    document.getElementById("firebaseStatus").textContent =
-      "Connected to Firebase config. Ready for demo.";
-    document.getElementById("firebaseStatus").className = "status success";
+    function startLiveSimulation() {
+      if (liveSimulationTimer) {
+        document.getElementById("sendStatus").textContent =
+          "Live simulation is already running.";
+        document.getElementById("sendStatus").className = "status";
+        return;
+      }
+
+      document.getElementById("sendStatus").textContent =
+        "Live simulation started. Readings update every 5 seconds.";
+      document.getElementById("sendStatus").className = "status success";
+
+      liveSimulationTimer = setInterval(() => {
+        let temp = number("temperature");
+        let pulse = number("pulse");
+        let cond = number("conductivity");
+        let intake = number("intake");
+        let minutes = number("minutes");
+
+        minutes = clamp(minutes + 5, 0, 240);
+
+        temp = clamp(temp + randomChange(0.08), 35.5, 39.5);
+        pulse = clamp(pulse + randomChange(3), 55, 125);
+        cond = clamp(cond + randomChange(18), 400, 950);
+
+        if (minutes > 90) {
+          pulse = clamp(pulse + 1.5, 55, 125);
+          cond = clamp(cond + 12, 400, 950);
+        }
+
+        if (minutes > 150) {
+          temp = clamp(temp + 0.04, 35.5, 39.5);
+          pulse = clamp(pulse + 2, 55, 125);
+          cond = clamp(cond + 18, 400, 950);
+        }
+
+        if (Math.random() < 0.12) {
+          intake = clamp(intake + 80, 0, 1800);
+          minutes = 0;
+          pulse = clamp(pulse - 8, 55, 125);
+          cond = clamp(cond - 70, 400, 950);
+          temp = clamp(temp - 0.15, 35.5, 39.5);
+        }
+
+        setValues(
+          temp.toFixed(1),
+          Math.round(pulse),
+          Math.round(cond),
+          Math.round(intake),
+          Math.round(minutes)
+        );
+
+        sendReading(false);
+      }, 5000);
+    }
+
+    function stopLiveSimulation() {
+      if (liveSimulationTimer) {
+        clearInterval(liveSimulationTimer);
+        liveSimulationTimer = null;
+      }
+
+      document.getElementById("sendStatus").textContent =
+        "Live simulation stopped.";
+      document.getElementById("sendStatus").className = "status";
+    }
+
+    function simulateSip() {
+      let intake = number("intake");
+      let pulse = number("pulse");
+      let cond = number("conductivity");
+      let temp = number("temperature");
+
+      setValues(
+        clamp(temp - 0.1, 35.5, 39.5).toFixed(1),
+        Math.round(clamp(pulse - 7, 55, 125)),
+        Math.round(clamp(cond - 80, 400, 950)),
+        Math.round(clamp(intake + 150, 0, 1800)),
+        0
+      );
+
+      sendReading(false);
+
+      document.getElementById("sendStatus").textContent =
+        "Patient sip simulated: intake increased, time since last sip reset, and risk indicators improved.";
+      document.getElementById("sendStatus").className = "status success";
+    }
+
+    if (!db) {
+      document.getElementById("firebaseStatus").textContent =
+        firebaseInitError
+          ? "Firebase initialization error: " + firebaseInitError
+          : "Firebase config is missing. Paste your Firebase keys in the code.";
+      document.getElementById("firebaseStatus").className = "status warn";
+    } else {
+      document.getElementById("firebaseStatus").textContent =
+        "Connected to Firebase config. Ready for live demo.";
+      document.getElementById("firebaseStatus").className = "status success";
+    }
 
     updateDisplay();
   </script>
