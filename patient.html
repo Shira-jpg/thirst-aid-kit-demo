@@ -4,141 +4,139 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The Thirst Aid Kit - Patient App</title>
-  
-<!-- Firebase v8 compat CDN libraries (required by the assignment) -->
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-<script>
-  // TODO: Replace this placeholder with your own Firebase configuration keys.
-  // Firebase Console -> Project settings -> Your apps -> SDK setup and configuration.
-  const firebaseConfig = {// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
+  <!-- Firebase v8 compat CDN libraries -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyDdA8UbaQhTy-AlvjXGUYOsoGk_IZ23te8",
-  authDomain: "aquavital-thirst-aid-kit.firebaseapp.com",
-  databaseURL: "https://aquavital-thirst-aid-kit-default-rtdb.firebaseio.com",
-  projectId: "aquavital-thirst-aid-kit",
-  storageBucket: "aquavital-thirst-aid-kit.firebasestorage.app",
-  messagingSenderId: "603947421819",
-  appId: "1:603947421819:web:10ae7430358752af4612de",
-  measurementId: "G-ZXDFM4BB0D"
-};
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDdA8UbaQhTy-AlvjXGUYOsoGk_IZ23te8",
+      authDomain: "aquavital-thirst-aid-kit.firebaseapp.com",
+      databaseURL: "https://aquavital-thirst-aid-kit-default-rtdb.firebaseio.com",
+      projectId: "aquavital-thirst-aid-kit",
+      storageBucket: "aquavital-thirst-aid-kit.firebasestorage.app",
+      messagingSenderId: "603947421819",
+      appId: "1:603947421819:web:10ae7430358752af4612de"
+    };
 
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-
-
-
-
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-
-
-  apiKey: "AIzaSyDdA8UbaQhTy-AlvjXGUYOsoGk_IZ23te8",
-
-
-  authDomain: "aquavital-thirst-aid-kit.firebaseapp.com",
-
-
-  databaseURL: "https://aquavital-thirst-aid-kit-default-rtdb.firebaseio.com",
-
-
-  projectId: "aquavital-thirst-aid-kit",
-
-
-  storageBucket: "aquavital-thirst-aid-kit.firebasestorage.app",
-
-
-  messagingSenderId: "603947421819",
-
-
-  appId: "1:603947421819:web:10ae7430358752af4612de",
-
-
-  measurementId: "G-ZXDFM4BB0D"
-
-
-}; 
-
-
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-
-
-
-  apiKey: "AIzaSyDdA8UbaQhTy-AlvjXGUYOsoGk_IZ23te8",
-
-
-  authDomain: "aquavital-thirst-aid-kit.firebaseapp.com",
-
-
-  databaseURL: "https://aquavital-thirst-aid-kit-default-rtdb.firebaseio.com",
-
-
-  projectId: "aquavital-thirst-aid-kit",
-
-
-  storageBucket: "aquavital-thirst-aid-kit.firebasestorage.app",
-
-
-  messagingSenderId: "603947421819",
-
-
-  appId: "1:603947421819:web:10ae7430358752af4612de",
-
-  };
-
-  function isFirebaseConfigured() {
-    return firebaseConfig.apiKey && !firebaseConfig.apiKey.includes("PASTE_") && firebaseConfig.databaseURL && !firebaseConfig.databaseURL.includes("PASTE_");
-  }
-
-  let db = null;
-  if (isFirebaseConfigured()) {
     firebase.initializeApp(firebaseConfig);
-    db = firebase.database();
-  }
-</script>
+    const db = firebase.database();
+  </script>
 
   <style>
-    body { font-family: Arial, sans-serif; margin: 0; background: #f5f7fb; color: #111827; }
-    header { background: #0f4c81; color: white; padding: 18px; text-align: center; }
-    main { max-width: 620px; margin: 18px auto; padding: 0 14px 30px; }
-    .card { background: white; border-radius: 14px; padding: 16px; margin-bottom: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-    label { display: block; font-weight: bold; margin-top: 12px; }
-    input[type="range"] { width: 100%; }
-    .value { font-weight: normal; color: #374151; }
-    button { width: 100%; border: none; border-radius: 10px; padding: 14px; margin-top: 10px; font-size: 16px; cursor: pointer; }
-    .normal { background: #d1fae5; }
-    .medium { background: #fef3c7; }
-    .danger { background: #fee2e2; }
-    .primary { background: #0f4c81; color: white; }
-    .alert { background: #b91c1c; color: white; font-weight: bold; }
-    .status { padding: 10px; border-radius: 10px; background: #e5e7eb; margin-top: 10px; }
-    .warn { background: #fff7ed; color: #9a3412; }
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .metric { background: #f3f4f6; padding: 10px; border-radius: 10px; }
-    .metric b { display: block; font-size: 18px; }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f5f7fb;
+      color: #111827;
+    }
+
+    header {
+      background: #0f4c81;
+      color: white;
+      padding: 18px;
+      text-align: center;
+    }
+
+    main {
+      max-width: 620px;
+      margin: 18px auto;
+      padding: 0 14px 30px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-top: 12px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+    }
+
+    .value {
+      font-weight: normal;
+      color: #374151;
+    }
+
+    button {
+      width: 100%;
+      border: none;
+      border-radius: 10px;
+      padding: 14px;
+      margin-top: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .normal {
+      background: #d1fae5;
+    }
+
+    .medium {
+      background: #fef3c7;
+    }
+
+    .danger {
+      background: #fee2e2;
+    }
+
+    .primary {
+      background: #0f4c81;
+      color: white;
+    }
+
+    .alert {
+      background: #b91c1c;
+      color: white;
+      font-weight: bold;
+    }
+
+    .status {
+      padding: 10px;
+      border-radius: 10px;
+      background: #e5e7eb;
+      margin-top: 10px;
+    }
+
+    .warn {
+      background: #fff7ed;
+      color: #9a3412;
+    }
+
+    .success {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .metric {
+      background: #f3f4f6;
+      padding: 10px;
+      border-radius: 10px;
+    }
+
+    .metric b {
+      display: block;
+      font-size: 18px;
+    }
   </style>
 </head>
+
 <body>
   <header>
     <h1>Patient App</h1>
@@ -148,11 +146,12 @@ const analytics = getAnalytics(app);
   <main>
     <div class="card">
       <h2>Firebase Status</h2>
-      <div id="firebaseStatus" class="status"></div>
+      <div id="firebaseStatus" class="status">Connecting...</div>
     </div>
 
     <div class="card">
       <h2>Simulated Sensor Readings</h2>
+
       <label>Temperature: <span class="value" id="temperatureVal">36.8</span> °C</label>
       <input id="temperature" type="range" min="35.5" max="39.5" step="0.1" value="36.8" />
 
@@ -189,90 +188,124 @@ const analytics = getAnalytics(app);
     </div>
   </main>
 
-<script>
-  const fields = ["temperature", "pulse", "conductivity", "intake", "minutes"];
-  function number(id) { return Number(document.getElementById(id).value); }
+  <script>
+    const fields = ["temperature", "pulse", "conductivity", "intake", "minutes"];
 
-  function updateDisplay() {
-    document.getElementById("temperatureVal").textContent = number("temperature").toFixed(1);
-    document.getElementById("pulseVal").textContent = number("pulse");
-    document.getElementById("conductivityVal").textContent = number("conductivity");
-    document.getElementById("intakeVal").textContent = number("intake");
-    document.getElementById("minutesVal").textContent = number("minutes");
-    const result = calculateRisk(false);
-    document.getElementById("riskLevel").textContent = result.level;
-    document.getElementById("riskScore").textContent = result.score;
-    document.getElementById("riskReason").textContent = result.reason;
-  }
-
-  fields.forEach(id => document.getElementById(id).addEventListener("input", updateDisplay));
-
-  function calculateRisk(forceAlert) {
-    const temp = number("temperature");
-    const pulse = number("pulse");
-    const cond = number("conductivity");
-    const intake = number("intake");
-    const minutes = number("minutes");
-
-    if (forceAlert) return { level: "High", score: 100, reason: "Forced high-risk alert for demo." };
-    if (cond >= 800 || minutes >= 180 || pulse >= 105 || temp >= 37.8) {
-      return { level: "High", score: 90, reason: "One or more high-risk thresholds were crossed." };
+    function number(id) {
+      return Number(document.getElementById(id).value);
     }
-    if (cond >= 650 || minutes >= 120 || pulse >= 95 || temp >= 37.3 || intake < 700) {
-      return { level: "Medium", score: 55, reason: "One or more medium-risk thresholds were crossed." };
-    }
-    return { level: "Low", score: 10, reason: "All readings are within normal demo thresholds." };
-  }
 
-  function setValues(temp, pulse, cond, intake, minutes) {
-    document.getElementById("temperature").value = temp;
-    document.getElementById("pulse").value = pulse;
-    document.getElementById("conductivity").value = cond;
-    document.getElementById("intake").value = intake;
-    document.getElementById("minutes").value = minutes;
+    function updateDisplay() {
+      document.getElementById("temperatureVal").textContent = number("temperature").toFixed(1);
+      document.getElementById("pulseVal").textContent = number("pulse");
+      document.getElementById("conductivityVal").textContent = number("conductivity");
+      document.getElementById("intakeVal").textContent = number("intake");
+      document.getElementById("minutesVal").textContent = number("minutes");
+
+      const result = calculateRisk(false);
+      document.getElementById("riskLevel").textContent = result.level;
+      document.getElementById("riskScore").textContent = result.score;
+      document.getElementById("riskReason").textContent = result.reason;
+    }
+
+    fields.forEach(id => {
+      document.getElementById(id).addEventListener("input", updateDisplay);
+    });
+
+    function calculateRisk(forceAlert) {
+      const temp = number("temperature");
+      const pulse = number("pulse");
+      const cond = number("conductivity");
+      const intake = number("intake");
+      const minutes = number("minutes");
+
+      if (forceAlert) {
+        return {
+          level: "High",
+          score: 100,
+          reason: "Forced high-risk alert for demo."
+        };
+      }
+
+      if (cond >= 800 || minutes >= 180 || pulse >= 105 || temp >= 37.8) {
+        return {
+          level: "High",
+          score: 90,
+          reason: "One or more high-risk thresholds were crossed."
+        };
+      }
+
+      if (cond >= 650 || minutes >= 120 || pulse >= 95 || temp >= 37.3 || intake < 700) {
+        return {
+          level: "Medium",
+          score: 55,
+          reason: "One or more medium-risk thresholds were crossed."
+        };
+      }
+
+      return {
+        level: "Low",
+        score: 10,
+        reason: "All readings are within normal demo thresholds."
+      };
+    }
+
+    function setValues(temp, pulse, cond, intake, minutes) {
+      document.getElementById("temperature").value = temp;
+      document.getElementById("pulse").value = pulse;
+      document.getElementById("conductivity").value = cond;
+      document.getElementById("intake").value = intake;
+      document.getElementById("minutes").value = minutes;
+      updateDisplay();
+    }
+
+    function presetNormal() {
+      setValues(36.8, 82, 540, 1100, 20);
+    }
+
+    function presetMedium() {
+      setValues(37.4, 96, 680, 650, 125);
+    }
+
+    function presetHigh() {
+      setValues(38.0, 110, 830, 420, 190);
+    }
+
+    function sendReading(forceAlert) {
+      const result = calculateRisk(forceAlert);
+
+      const reading = {
+        patientName: "Demo Patient",
+        temperature: number("temperature"),
+        pulse: number("pulse"),
+        salivaConductivity: number("conductivity"),
+        dailyIntakeMl: number("intake"),
+        minutesSinceLastSip: number("minutes"),
+        riskLevel: result.level,
+        riskScore: result.score,
+        alertForced: forceAlert,
+        alertReason: result.reason,
+        updatedAt: Date.now()
+      };
+
+      db.ref("demo/current").set(reading)
+        .then(() => {
+          document.getElementById("sendStatus").textContent =
+            "Reading sent to caregiver app: " + result.level + " risk.";
+          document.getElementById("sendStatus").className = "status success";
+        })
+        .catch(err => {
+          document.getElementById("sendStatus").textContent =
+            "Firebase error: " + err.message;
+          document.getElementById("sendStatus").className = "status warn";
+        });
+    }
+
+    document.getElementById("firebaseStatus").textContent =
+      "Connected to Firebase config. Ready for demo.";
+    document.getElementById("firebaseStatus").className = "status success";
+
     updateDisplay();
-  }
-
-  function presetNormal() { setValues(36.8, 82, 540, 1100, 20); }
-  function presetMedium() { setValues(37.4, 96, 680, 650, 125); }
-  function presetHigh() { setValues(38.0, 110, 830, 420, 190); }
-
-  function sendReading(forceAlert) {
-    const result = calculateRisk(forceAlert);
-    const reading = {
-      patientName: "Demo Patient",
-      temperature: number("temperature"),
-      pulse: number("pulse"),
-      salivaConductivity: number("conductivity"),
-      dailyIntakeMl: number("intake"),
-      minutesSinceLastSip: number("minutes"),
-      riskLevel: result.level,
-      riskScore: result.score,
-      alertForced: forceAlert,
-      alertReason: result.reason,
-      updatedAt: Date.now()
-    };
-
-    if (!db) {
-      document.getElementById("sendStatus").textContent = "Firebase config is missing. Add your Firebase keys first.";
-      document.getElementById("sendStatus").className = "status warn";
-      return;
-    }
-
-    db.ref("demo/current").set(reading)
-      .then(() => {
-        document.getElementById("sendStatus").textContent = "Reading sent to caregiver app: " + result.level + " risk.";
-        document.getElementById("sendStatus").className = "status";
-      })
-      .catch(err => {
-        document.getElementById("sendStatus").textContent = "Firebase error: " + err.message;
-        document.getElementById("sendStatus").className = "status warn";
-      });
-  }
-
-  document.getElementById("firebaseStatus").textContent = db ? "Connected to Firebase config. Ready for demo." : "Firebase config is missing. Paste your Firebase keys in the code.";
-  document.getElementById("firebaseStatus").className = db ? "status" : "status warn";
-  updateDisplay();
-</script>
+  </script>
 </body>
 </html>
